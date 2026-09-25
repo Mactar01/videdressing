@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Http\Controllers\Api\V1;
 
@@ -20,19 +20,22 @@ class AuthController extends BaseApiController
      */
     public function register(RegisterRequest $request): JsonResponse
     {
+        $otp = (string) random_int(100000, 999999);
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password ? Hash::make($request->password) : null,
             'phone' => $request->phone,
+            'otp_code' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        \Illuminate\Support\Facades\Auth::login($user); $request->session()->regenerate();
+        \Illuminate\Support\Facades\Log::info("OTP pour {$user->phone} : {$otp}");
 
         return $this->sendResponse([
-            'user' => $user,
-            
-        ], 'User registered successfully', 201);
+            'message' => 'OTP sent',
+        ], 'User registered successfully, OTP sent', 201);
     }
 
     /**
@@ -69,6 +72,63 @@ class AuthController extends BaseApiController
         }
 
         return $this->sendError('Invalid credentials', [], 401);
+    }
+
+    /**
+     * Send OTP to existing user for login.
+     */
+    public function sendOtp(Request $request): JsonResponse
+    {
+        $request->validate([
+            'phone' => 'required|string',
+        ]);
+
+        $user = User::where('phone', $request->phone)->first();
+
+        if (!$user) {
+            return $this->sendError('User not found', [], 404);
+        }
+
+        $otp = (string) random_int(100000, 999999);
+        $user->update([
+            'otp_code' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
+        ]);
+
+        \Illuminate\Support\Facades\Log::info("OTP pour {$user->phone} : {$otp}");
+
+        return $this->sendResponse([
+            'message' => 'OTP sent',
+        ], 'OTP sent successfully');
+    }
+
+    /**
+     * Verify OTP and login user.
+     */
+    public function verifyOtp(Request $request): JsonResponse
+    {
+        $request->validate([
+            'phone' => 'required|string',
+            'code' => 'required|string',
+        ]);
+
+        $user = User::where('phone', $request->phone)->first();
+
+        if (!$user || $user->otp_code !== $request->code || $user->otp_expires_at < now()) {
+            return $this->sendError('Invalid or expired OTP', [], 401);
+        }
+
+        $user->update([
+            'otp_code' => null,
+            'otp_expires_at' => null,
+        ]);
+
+        \Illuminate\Support\Facades\Auth::login($user);
+        $request->session()->regenerate();
+
+        return $this->sendResponse([
+            'user' => $user,
+        ], 'User logged in successfully');
     }
 
     /**

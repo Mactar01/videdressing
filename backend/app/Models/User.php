@@ -54,6 +54,8 @@ class User extends Authenticatable
         'is_banned',
         'stripe_account_id',
         'stripe_customer_id',
+        'otp_code',
+        'otp_expires_at',
     ];
 
     /**
@@ -66,6 +68,7 @@ class User extends Authenticatable
         'remember_token',
         'stripe_account_id',
         'stripe_customer_id',
+        'otp_code',
     ];
 
     /**
@@ -80,6 +83,7 @@ class User extends Authenticatable
         'is_banned' => 'boolean',
         'deleted_at' => 'datetime',
         'password' => 'hashed',
+        'otp_expires_at' => 'datetime',
     ];
 
     /**

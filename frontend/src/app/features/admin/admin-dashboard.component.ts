@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -12,11 +12,11 @@ import { environment } from '../../../environments/environment';
       <div class="flex items-center justify-between mb-8">
         <div>
           <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Panneau d'Administration</h1>
-          <p class="text-gray-500 mt-1">Supervisez l'activité de votre marketplace VideDressing.</p>
+          <p class="text-gray-500 mt-1">Supervisez l'activitÃ© de votre marketplace VideDressing.</p>
         </div>
         <div class="bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md flex items-center gap-2">
           <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          Système En Ligne
+          SystÃ¨me En Ligne
         </div>
       </div>
 
@@ -25,12 +25,12 @@ import { environment } from '../../../environments/environment';
       </div>
 
       <ng-container *ngIf="!isLoading && stats">
-        <!-- Chiffres clés -->
+        <!-- Chiffres clÃ©s -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           
           <div class="glass-panel p-6 border-t-4 border-watermelon-pink transform hover:-translate-y-1 transition-all">
             <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wider">Volume des ventes</p>
-            <h3 class="text-4xl font-black text-gray-900">{{ stats.metrics.revenue | number:'1.2-2' }} €</h3>
+            <h3 class="text-4xl font-black text-gray-900">{{ stats.metrics.revenue | number:'1.2-2' }} â‚¬</h3>
             <p class="text-green-500 text-xs mt-2 font-bold flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
               En croissance
@@ -80,10 +80,10 @@ import { environment } from '../../../environments/environment';
             </div>
           </div>
 
-          <!-- Dernières Annonces -->
+          <!-- DerniÃ¨res Annonces -->
           <div class="glass-panel p-6">
             <div class="flex justify-between items-center mb-6">
-              <h3 class="text-xl font-bold text-gray-900">Annonces Récentes</h3>
+              <h3 class="text-xl font-bold text-gray-900">Annonces RÃ©centes</h3>
               <button class="text-watermelon-pink text-sm font-bold hover:underline">Voir tout</button>
             </div>
             <div class="space-y-4">
@@ -93,7 +93,7 @@ import { environment } from '../../../environments/environment';
                 </div>
                 <div class="flex-1 overflow-hidden">
                   <h4 class="font-bold text-gray-900 text-sm truncate">{{ extractLocalString(listing.title) }}</h4>
-                  <p class="text-xs text-watermelon-pink font-bold">{{ listing.price }} €</p>
+                  <p class="text-xs text-watermelon-pink font-bold">{{ listing.price }} â‚¬</p>
                 </div>
                 <div class="flex gap-2">
                   <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors" title="Valider">
@@ -118,7 +118,7 @@ export class AdminDashboardComponent implements OnInit {
   isLoading = true;
 
   ngOnInit() {
-    this.http.get(`${environment.apiUrl}/admin/dashboard`).subscribe({
+    this.http.get(`/api/v1/admin/dashboard`).subscribe({
       next: (res: any) => {
         this.stats = res.data;
         this.isLoading = false;

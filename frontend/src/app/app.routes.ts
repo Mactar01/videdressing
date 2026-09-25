@@ -38,7 +38,7 @@ export const routes: Routes = [
         title: 'Déposer une annonce'
       } , { path: 'inbox', loadComponent: () => import('./features/dashboard/inbox.component').then(m => m.InboxComponent) }, { path: 'inbox/:id', loadComponent: () => import('./features/dashboard/inbox.component').then(m => m.InboxComponent) }
     ]
-  }
+  },
   { path: 'admin/dashboard', component: AdminDashboardComponent },
   { path: 'dashboard/favorites', component: FavoritesComponent },
 ];

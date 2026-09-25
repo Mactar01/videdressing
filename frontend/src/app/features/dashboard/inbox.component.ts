@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+﻿import { Component, OnInit, inject, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -58,7 +58,7 @@ import { switchMap } from 'rxjs/operators';
             <div>
               <h3 class="font-bold text-gray-900">{{ getOtherUser(activeConversation).name }}</h3>
               <a [routerLink]="['/listing', activeConversation.listing.id]" class="text-xs text-watermelon-pink hover:underline truncate max-w-xs block">
-                {{ extractLocalString(activeConversation.listing.title) }} - {{ activeConversation.listing.price }}€
+                {{ extractLocalString(activeConversation.listing.title) }} - {{ activeConversation.listing.price }}â‚¬
               </a>
             </div>
           </div>
@@ -84,7 +84,7 @@ import { switchMap } from 'rxjs/operators';
                 type="text" 
                 [(ngModel)]="newMessage" 
                 name="message" 
-                placeholder="Écrivez un message..." 
+                placeholder="Ã‰crivez un message..." 
                 class="flex-1 bg-gray-100 border-transparent rounded-full px-6 py-3 focus:bg-white focus:ring-2 focus:ring-watermelon-pink/50 focus:border-transparent transition-all outline-none"
                 autocomplete="off"
               >
@@ -104,7 +104,7 @@ import { switchMap } from 'rxjs/operators';
               <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
             </div>
             <h3 class="text-xl font-bold text-gray-700 mb-2">Vos messages</h3>
-            <p class="text-sm">Sélectionnez une conversation sur la gauche pour commencer à discuter.</p>
+            <p class="text-sm">SÃ©lectionnez une conversation sur la gauche pour commencer Ã  discuter.</p>
           </div>
         </ng-template>
 
@@ -173,9 +173,9 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   startPolling() {
     this.stopPolling();
-    // Écoute temps réel via Reverb
+    // Ã‰coute temps rÃ©el via Reverb
     this.echoService.listenToConversation(this.activeConversationId!, (event) => {
-      // Ignorer si le message vient de nous-même (déjà affiché via l'ajout optimiste)
+      // Ignorer si le message vient de nous-mÃªme (dÃ©jÃ  affichÃ© via l'ajout optimiste)
       if (event.sender_id !== this.currentUserId) {
         this.messages.push({
           id: event.id,
@@ -196,7 +196,6 @@ export class InboxComponent implements OnInit, OnDestroy {
     if (this.activeConversationId) {
       this.echoService.leaveConversation(this.activeConversationId);
     }
-  }
   }
 
   sendMessage() {
@@ -237,7 +236,7 @@ export class InboxComponent implements OnInit, OnDestroy {
         if (this.myScrollContainer) {
           this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
         }
-      } catch(err) { }
+      } catch(e: any) { }
     }, 100);
   }
 }

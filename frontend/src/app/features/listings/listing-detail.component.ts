@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+﻿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
@@ -18,7 +18,7 @@ import { catchError, of } from 'rxjs';
       <nav class="mb-8 text-sm font-medium text-gray-500">
         <a routerLink="/" class="hover:text-watermelon-pink transition-colors">Accueil</a>
         <span class="mx-2">/</span>
-        <a href="#" class="hover:text-watermelon-pink transition-colors">{{ extractLocalString(listing.category?.name) || 'Catégorie' }}</a>
+        <a href="#" class="hover:text-watermelon-pink transition-colors">{{ extractLocalString(listing.category?.name) || 'CatÃ©gorie' }}</a>
         <span class="mx-2">/</span>
         <span class="text-gray-900">{{ extractLocalString(listing.title) }}</span>
       </nav>
@@ -40,7 +40,7 @@ import { catchError, of } from 'rxjs';
 
         <!-- Section Droite : Panneau d'informations Glassmorphism -->
         <div class="lg:col-span-5 relative">
-          <!-- Ce panneau reste collé à l'écran lors du défilement -->
+          <!-- Ce panneau reste collÃ© Ã  l'Ã©cran lors du dÃ©filement -->
           <div class="sticky top-28 glass-panel p-8">
             <div class="flex justify-between items-start mb-4">
               <h1 class="text-3xl font-extrabold text-gray-900 leading-tight">
@@ -57,7 +57,7 @@ import { catchError, of } from 'rxjs';
 
             <div class="space-y-4 mb-8 text-sm">
               <div class="flex justify-between py-3 border-b border-gray-200/50">
-                <span class="text-gray-500 font-medium">État</span>
+                <span class="text-gray-500 font-medium">Ã‰tat</span>
                 <span class="text-gray-900 font-bold uppercase tracking-wider text-xs">{{ listing.condition }}</span>
               </div>
               <div class="flex justify-between py-3 border-b border-gray-200/50">
@@ -103,11 +103,11 @@ import { catchError, of } from 'rxjs';
     <!-- Templates alternatifs -->
     <ng-template #loadingOrError>
       <div class="py-20 text-center text-gray-500 animate-pulse" *ngIf="!hasError">
-        Chargement de la pépite...
+        Chargement de la pÃ©pite...
       </div>
       <div class="py-20 text-center text-red-500" *ngIf="hasError">
         <h2 class="text-2xl font-bold mb-4">Annonce introuvable</h2>
-        <button routerLink="/" class="px-6 py-3 bg-gray-900 text-white rounded-full">Retour à l'accueil</button>
+        <button routerLink="/" class="px-6 py-3 bg-gray-900 text-white rounded-full">Retour Ã  l'accueil</button>
       </div>
     </ng-template>
   `
@@ -118,7 +118,7 @@ export class ListingDetailComponent implements OnInit {
   private titleService = inject(Title);
   private metaService = inject(Meta);
   private listingService = inject(ListingService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private messageService = inject(MessageService);
 
   listing: Listing | null = null;
@@ -135,7 +135,7 @@ export class ListingDetailComponent implements OnInit {
     this.listingService.getListing(id).pipe(
       catchError(err => {
         this.hasError = true;
-        // Permet au SSR de renvoyer un code 404 (idéalement via un token d'injection serveur)
+        // Permet au SSR de renvoyer un code 404 (idÃ©alement via un token d'injection serveur)
         return of(null);
       })
     ).subscribe(data => {
@@ -148,10 +148,10 @@ export class ListingDetailComponent implements OnInit {
 
   updateSeoTags(listing: Listing) {
     const title = this.extractLocalString(listing.title);
-    const description = this.extractLocalString(listing.description)?.substring(0, 160) || 'Découvrez cet article sur VideDressing.';
+    const description = this.extractLocalString(listing.description)?.substring(0, 160) || 'DÃ©couvrez cet article sur VideDressing.';
     const imageUrl = this.coverImageUrl();
 
-    // Rendu côté serveur pour le SEO Google
+    // Rendu cÃ´tÃ© serveur pour le SEO Google
     this.titleService.setTitle(`${title} - Vendu par ${listing.user?.name} | VideDressing`);
     
     this.metaService.updateTag({ name: 'description', content: description });
@@ -173,7 +173,7 @@ export class ListingDetailComponent implements OnInit {
   }
 
   /**
-   * Retourne l'URL de la première image, ou un joli dégradé par défaut
+   * Retourne l'URL de la premiÃ¨re image, ou un joli dÃ©gradÃ© par dÃ©faut
    */
   coverImageUrl(): string {
     if (this.listing?.images && this.listing.images.length > 0) {
@@ -184,8 +184,8 @@ export class ListingDetailComponent implements OnInit {
   }
 
   /**
-   * Vérifie si l'utilisateur est connecté avant d'Acheter ou de Contacter.
-   * Sinon, le redirige vers le login avec un paramètre "returnUrl".
+   * VÃ©rifie si l'utilisateur est connectÃ© avant d'Acheter ou de Contacter.
+   * Sinon, le redirige vers le login avec un paramÃ¨tre "returnUrl".
    */
   handleProtectedAction(action: 'buy' | 'contact') {
     if (this.authService.currentUserValue) {
@@ -198,12 +198,12 @@ export class ListingDetailComponent implements OnInit {
                this.router.navigate(['/dashboard/inbox', conv.id]);
             },
             error: (err) => {
-               alert(err.error?.message || "Impossible de d�marrer la conversation.");
+               alert(err.error?.message || "Impossible de dmarrer la conversation.");
             }
           });
         }
     } else {
-      // Redirection vers login en mémorisant l'URL courante
+      // Redirection vers login en mÃ©morisant l'URL courante
       this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
     }
   }

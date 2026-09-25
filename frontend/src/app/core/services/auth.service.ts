@@ -15,7 +15,7 @@ export interface User {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = ''; // On utilise le proxy Angular désormais !
+  private apiUrl = ''; // On utilise le proxy Angular dÃ©sormais !
   
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   /**
-   * Tente de récupérer le profil de l'utilisateur s'il est déjà connecté via les cookies
+   * Tente de rÃ©cupÃ©rer le profil de l'utilisateur s'il est dÃ©jÃ  connectÃ© via les cookies
    */
   checkAuthStatus(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/api/v1/auth/me`).pipe(
@@ -45,18 +45,38 @@ export class AuthService {
   /**
    * Connecte l'utilisateur
    */
-  login(credentials: any): Observable<User> {
+
+  /**
+   * Inscrit l'utilisateur
+   */
+  register(credentials: {name: string, phone: string, email?: string}): Observable<User> {
     return this.csrfCookie().pipe(
-      // 1. Obtenir le cookie
-      switchMap(() => this.http.post(`${this.apiUrl}/api/v1/auth/login`, credentials)),
-      // 2. Se connecter
+      switchMap(() => this.http.post<any>(this.apiUrl + '/api/v1/auth/register', credentials)),
       switchMap(() => this.checkAuthStatus())
-      // 3. Récupérer et stocker l'utilisateur, ce qui autorisera l'AuthGuard
     );
   }
 
   /**
-   * Déconnecte l'utilisateur
+   * Envoie un OTP au téléphone
+   */
+  sendOtp(phone: string): Observable<any> {
+    return this.csrfCookie().pipe(
+      switchMap(() => this.http.post(`${this.apiUrl}/api/v1/auth/send-otp`, { phone }))
+    );
+  }
+
+  /**
+   * Vérifie le code OTP pour se connecter
+   */
+  verifyOtp(phone: string, code: string): Observable<User> {
+    return this.csrfCookie().pipe(
+      switchMap(() => this.http.post(`${this.apiUrl}/api/v1/auth/verify-otp`, { phone, code })),
+      switchMap(() => this.checkAuthStatus())
+    );
+  }
+
+  /**
+   * DÃ©connecte l'utilisateur
    */
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/v1/auth/logout`, {}).pipe(

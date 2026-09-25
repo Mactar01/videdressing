@@ -25,7 +25,7 @@ import { AuthService } from '../../core/services/auth.service';
             {{ isLoginMode ? 'Bon retour !' : 'Rejoignez-nous' }}
           </h2>
           <p class="text-gray-500 mt-2 text-sm">
-            {{ isLoginMode ? 'Connectez-vous pour continuer sur VideDressing.' : 'Créez un compte pour vendre et acheter.' }}
+            {{ step === 1 ? (isLoginMode ? 'Connectez-vous pour continuer sur VideDressing.' : 'Créez un compte pour vendre et acheter.') : 'Entrez le code reçu par SMS.' }}
           </p>
         </div>
 
@@ -35,7 +35,8 @@ import { AuthService } from '../../core/services/auth.service';
           {{ errorMessage }}
         </div>
 
-        <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <!-- Etape 1: Formulaire Téléphone -->
+        <form *ngIf="step === 1" [formGroup]="authForm" (ngSubmit)="onSubmitStep1()" class="space-y-5">
           
           <!-- Champ Nom (Uniquement pour inscription) -->
           <div *ngIf="!isLoginMode" class="space-y-1 animate-fade-in-up">
@@ -48,9 +49,9 @@ import { AuthService } from '../../core/services/auth.service';
             >
           </div>
 
-          <!-- Champ Email -->
-          <div class="space-y-1">
-            <label class="block text-sm font-semibold text-gray-700">Adresse e-mail</label>
+          <!-- Champ Email (Optionnel, uniquement pour inscription) -->
+          <div *ngIf="!isLoginMode" class="space-y-1 animate-fade-in-up">
+            <label class="block text-sm font-semibold text-gray-700">Adresse e-mail (optionnelle)</label>
             <input 
               type="email" 
               formControlName="email"
@@ -59,18 +60,15 @@ import { AuthService } from '../../core/services/auth.service';
             >
           </div>
 
-          <!-- Champ Mot de passe -->
+          <!-- Champ Téléphone -->
           <div class="space-y-1">
-            <label class="block text-sm font-semibold text-gray-700">Mot de passe</label>
+            <label class="block text-sm font-semibold text-gray-700">Numéro de téléphone</label>
             <input 
-              type="password" 
-              formControlName="password"
-              placeholder="••••••••"
+              type="tel" 
+              formControlName="phone"
+              placeholder="+33 6 12 34 56 78"
               class="w-full bg-white/60 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-watermelon-pink/50 focus:bg-white transition-all shadow-sm"
             >
-            <div *ngIf="isLoginMode" class="flex justify-end pt-1">
-              <a href="#" class="text-xs text-watermelon-pink hover:underline font-medium">Mot de passe oublié ?</a>
-            </div>
           </div>
 
           <!-- Bouton Soumettre -->
@@ -80,14 +78,46 @@ import { AuthService } from '../../core/services/auth.service';
             class="w-full py-3.5 mt-2 bg-gradient-to-r from-watermelon-pink to-watermelon-light text-white rounded-xl font-bold shadow-lg hover:shadow-watermelon-pink/40 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none flex justify-center items-center gap-2"
           >
             <span *ngIf="isLoading" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-            {{ isLoginMode ? 'Se connecter' : 'Créer mon compte' }}
+            {{ isLoginMode ? 'Recevoir le code' : 'S\\'inscrire et recevoir le code' }}
+          </button>
+        </form>
+
+        <!-- Etape 2: Code OTP -->
+        <form *ngIf="step === 2" [formGroup]="otpForm" (ngSubmit)="onSubmitStep2()" class="space-y-5 animate-fade-in-up">
+          <div class="space-y-1 text-center">
+            <label class="block text-sm font-semibold text-gray-700 mb-4">Code à 6 chiffres</label>
+            <input 
+              type="text" 
+              formControlName="code"
+              placeholder="123456"
+              maxlength="6"
+              class="w-full text-center tracking-[0.5em] text-2xl bg-white/60 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-watermelon-pink/50 focus:bg-white transition-all shadow-sm"
+            >
+          </div>
+
+          <!-- Bouton Soumettre OTP -->
+          <button 
+            type="submit" 
+            [disabled]="otpForm.invalid || isLoading"
+            class="w-full py-3.5 mt-2 bg-gradient-to-r from-watermelon-pink to-watermelon-light text-white rounded-xl font-bold shadow-lg hover:shadow-watermelon-pink/40 hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none flex justify-center items-center gap-2"
+          >
+            <span *ngIf="isLoading" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            Vérifier le code
+          </button>
+          
+          <button 
+            type="button"
+            (click)="goBack()"
+            class="w-full py-2 mt-2 text-gray-500 text-sm font-medium hover:text-gray-800 transition-colors"
+          >
+            Retour
           </button>
         </form>
 
         <!-- Toggle Mode -->
-        <p class="mt-8 text-center text-sm text-gray-600">
+        <p *ngIf="step === 1" class="mt-8 text-center text-sm text-gray-600">
           {{ isLoginMode ? 'Nouveau sur VideDressing ?' : 'Déjà un compte ?' }}
-          <button (click)="toggleMode()" class="text-watermelon-pink font-bold hover:underline focus:outline-none ml-1">
+          <button type="button" (click)="toggleMode()" class="text-watermelon-pink font-bold hover:underline focus:outline-none ml-1">
             {{ isLoginMode ? 'Créer un compte' : 'Se connecter' }}
           </button>
         </p>
@@ -103,24 +133,29 @@ export class LoginComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
   authForm: FormGroup;
+  otpForm: FormGroup;
+  
   isLoginMode = true;
   isLoading = false;
   errorMessage = '';
   returnUrl = '/';
+  step = 1; // 1: Phone, 2: OTP
 
   constructor() {
     this.authForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      name: ['']
+      phone: ['', [Validators.required, Validators.minLength(8)]],
+      name: [''],
+      email: ['', [Validators.email]]
+    });
+
+    this.otpForm = this.fb.group({
+      code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
     });
   }
 
   ngOnInit() {
-    // On mémorise l'URL depuis laquelle l'utilisateur vient pour le rediriger après
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     
-    // S'il est déjà connecté, on le redirige directement
     if (this.authService.currentUserValue) {
       this.router.navigate([this.returnUrl]);
     }
@@ -129,6 +164,7 @@ export class LoginComponent implements OnInit {
   toggleMode() {
     this.isLoginMode = !this.isLoginMode;
     this.errorMessage = '';
+    this.authForm.reset();
     
     if (!this.isLoginMode) {
       this.authForm.get('name')?.setValidators([Validators.required]);
@@ -138,7 +174,13 @@ export class LoginComponent implements OnInit {
     this.authForm.get('name')?.updateValueAndValidity();
   }
 
-  onSubmit() {
+  goBack() {
+    this.step = 1;
+    this.errorMessage = '';
+    this.otpForm.reset();
+  }
+
+  onSubmitStep1() {
     if (this.authForm.invalid) return;
 
     this.isLoading = true;
@@ -147,21 +189,52 @@ export class LoginComponent implements OnInit {
     const credentials = this.authForm.value;
 
     if (this.isLoginMode) {
-      // Connexion
-      this.authService.login({ email: credentials.email, password: credentials.password }).subscribe({
+      this.authService.sendOtp(credentials.phone).subscribe({
         next: () => {
-          this.router.navigate([this.returnUrl]);
+          this.isLoading = false;
+          this.step = 2;
         },
         error: (err) => {
           this.isLoading = false;
-          this.errorMessage = "Email ou mot de passe incorrect.";
+          this.errorMessage = err.error?.message || "Erreur lors de l'envoi du code.";
         }
       });
     } else {
-      // Inscription (Simulation - on appellerait un this.authService.register)
-      // Pour le MVP, si vous avez une route d'enregistrement dans Laravel, on l'appellera ici.
-      this.errorMessage = "L'inscription sera câblée à Laravel dans la prochaine étape !";
-      this.isLoading = false;
+      this.authService.register({
+        name: credentials.name,
+        phone: credentials.phone,
+        email: credentials.email
+      }).subscribe({
+        next: () => {
+          this.isLoading = false;
+          // Si l'inscription ne connecte pas automatiquement et renvoie un OTP
+          this.step = 2;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err.error?.message || "Erreur lors de l'inscription.";
+        }
+      });
     }
+  }
+
+  onSubmitStep2() {
+    if (this.otpForm.invalid) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const phone = this.authForm.value.phone;
+    const code = this.otpForm.value.code;
+
+    this.authService.verifyOtp(phone, code).subscribe({
+      next: () => {
+        this.router.navigate([this.returnUrl]);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.message || "Code invalide ou expiré.";
+      }
+    });
   }
 }

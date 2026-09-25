@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+ï»¿import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -8,7 +8,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
   selector: 'app-search',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  template: \
+  template: `
     <div class="max-w-7xl mx-auto px-4 animate-fade-in-up flex flex-col md:flex-row gap-8">
       
       <!-- Colonne Filtres (Sidebar) -->
@@ -21,9 +21,9 @@ import { ListingService, Listing } from '../../core/services/listing.service';
             <label class="block text-sm font-bold text-gray-700 mb-2">Trier par</label>
             <select [(ngModel)]="filters.sort" (change)="applyFilters()" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-watermelon-pink/50 focus:border-transparent outline-none transition-all">
               <option value="relevance">Pertinence</option>
-              <option value="date">Les plus récents</option>
+              <option value="date">Les plus rcents</option>
               <option value="price_asc">Prix croissant</option>
-              <option value="price_desc">Prix décroissant</option>
+              <option value="price_desc">Prix dcroissant</option>
             </select>
           </div>
           
@@ -31,7 +31,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
 
           <!-- Prix -->
           <div class="mb-6">
-            <label class="block text-sm font-bold text-gray-700 mb-2">Prix (€)</label>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Prix ()</label>
             <div class="flex items-center gap-2">
               <input type="number" [(ngModel)]="filters.min_price" placeholder="Min" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-watermelon-pink/50 outline-none transition-all">
               <span class="text-gray-400">-</span>
@@ -41,50 +41,50 @@ import { ListingService, Listing } from '../../core/services/listing.service';
           
           <hr class="border-gray-200 mb-6">
 
-          <!-- État -->
+          <!-- tat -->
           <div class="mb-6">
-            <label class="block text-sm font-bold text-gray-700 mb-3">État de l'article</label>
+            <label class="block text-sm font-bold text-gray-700 mb-3">tat de l'article</label>
             <div class="space-y-2">
               <label class="flex items-center gap-3 cursor-pointer group">
                 <input type="radio" name="condition" [(ngModel)]="filters.condition" value="" class="w-4 h-4 text-watermelon-pink border-gray-300 focus:ring-watermelon-pink">
-                <span class="text-sm text-gray-600 group-hover:text-gray-900">Tous les états</span>
+                <span class="text-sm text-gray-600 group-hover:text-gray-900">Tous les tats</span>
               </label>
               <label class="flex items-center gap-3 cursor-pointer group">
                 <input type="radio" name="condition" [(ngModel)]="filters.condition" value="new" class="w-4 h-4 text-watermelon-pink border-gray-300 focus:ring-watermelon-pink">
-                <span class="text-sm text-gray-600 group-hover:text-gray-900">Neuf avec étiquette</span>
+                <span class="text-sm text-gray-600 group-hover:text-gray-900">Neuf avec tiquette</span>
               </label>
               <label class="flex items-center gap-3 cursor-pointer group">
                 <input type="radio" name="condition" [(ngModel)]="filters.condition" value="like_new" class="w-4 h-4 text-watermelon-pink border-gray-300 focus:ring-watermelon-pink">
-                <span class="text-sm text-gray-600 group-hover:text-gray-900">Très bon état</span>
+                <span class="text-sm text-gray-600 group-hover:text-gray-900">Trs bon tat</span>
               </label>
               <label class="flex items-center gap-3 cursor-pointer group">
                 <input type="radio" name="condition" [(ngModel)]="filters.condition" value="good" class="w-4 h-4 text-watermelon-pink border-gray-300 focus:ring-watermelon-pink">
-                <span class="text-sm text-gray-600 group-hover:text-gray-900">Bon état</span>
+                <span class="text-sm text-gray-600 group-hover:text-gray-900">Bon tat</span>
               </label>
             </div>
           </div>
 
           <!-- Bouton d'action -->
           <button (click)="applyFilters()" class="w-full py-3 bg-gray-900 text-white rounded-xl font-bold shadow-md hover:-translate-y-0.5 transition-all">
-            Voir les résultats
+            Voir les rsultats
           </button>
           
         </div>
       </aside>
 
-      <!-- Colonne Principale (Résultats) -->
+      <!-- Colonne Principale (Rsultats) -->
       <main class="flex-1">
-        <!-- En-tête de recherche -->
+        <!-- En-tte de recherche -->
         <div class="mb-8">
           <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">
-            Résultats <span *ngIf="query">pour "<span class="text-watermelon-pink">{{ query }}</span>"</span>
+            Rsultats <span *ngIf="query">pour "<span class="text-watermelon-pink">{{ query }}</span>"</span>
           </h1>
           <p class="text-gray-500 mt-1">
-            {{ totalResults }} pépites trouvées pour vous.
+            {{ totalResults }} ppites trouves pour vous.
           </p>
         </div>
 
-        <!-- Grille des résultats -->
+        <!-- Grille des rsultats -->
         <div *ngIf="!isLoading && results.length > 0" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16">
           <div *ngFor="let item of results" [routerLink]="['/listing', item.id]" class="glass-panel group cursor-pointer flex flex-col h-full overflow-hidden hover:shadow-watermelon-pink/10 hover:-translate-y-1 transition-all">
             <div class="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden">
@@ -96,9 +96,9 @@ import { ListingService, Listing } from '../../core/services/listing.service';
             <div class="p-4 flex-1 flex flex-col">
               <div class="flex justify-between items-start mb-1">
                 <h3 class="font-bold text-gray-900 leading-tight truncate pr-2">{{ extractLocalString(item.title) }}</h3>
-                <span class="font-black text-watermelon-pink whitespace-nowrap">{{ item.price }}€</span>
+                <span class="font-black text-watermelon-pink whitespace-nowrap">{{ item.price }}</span>
               </div>
-              <p class="text-xs text-gray-500 mb-3 truncate">{{ item.city || 'Paris' }} • {{ item.condition }}</p>
+              <p class="text-xs text-gray-500 mb-3 truncate">{{ item.city || 'Paris' }}  {{ item.condition }}</p>
               <div class="mt-auto flex items-center gap-2 pt-3 border-t border-gray-100/50">
                 <div class="w-5 h-5 bg-gradient-to-tr from-purple-400 to-pink-300 rounded-full flex-shrink-0"></div>
                 <span class="text-xs text-gray-600 font-medium truncate">{{ item.user?.name || 'Vendeur' }}</span>
@@ -107,22 +107,22 @@ import { ListingService, Listing } from '../../core/services/listing.service';
           </div>
         </div>
 
-        <!-- États Vides / Chargement -->
+        <!-- tats Vides / Chargement -->
         <div *ngIf="isLoading" class="py-20 flex justify-center">
           <div class="w-10 h-10 border-4 border-watermelon-pink border-t-transparent rounded-full animate-spin"></div>
         </div>
         
         <div *ngIf="!isLoading && results.length === 0" class="py-20 text-center glass-panel border-dashed border-2 border-gray-300">
           <div class="text-6xl mb-4 opacity-50">??</div>
-          <h3 class="text-xl font-bold text-gray-700">Aucun résultat trouvé</h3>
+          <h3 class="text-xl font-bold text-gray-700">Aucun rsultat trouv</h3>
           <p class="text-gray-500 mt-2">Essayez de retirer certains filtres ou de modifier vos termes de recherche.</p>
-          <button (click)="resetFilters()" class="mt-4 px-6 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-bold hover:bg-gray-300 transition-colors">Réinitialiser les filtres</button>
+          <button (click)="resetFilters()" class="mt-4 px-6 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-bold hover:bg-gray-300 transition-colors">Rinitialiser les filtres</button>
         </div>
       </main>
 
     </div>
-  \
-})
+    `
+  })
 export class SearchComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private listingService = inject(ListingService);
@@ -157,7 +157,7 @@ export class SearchComponent implements OnInit {
 
   performSearch() {
     this.isLoading = true;
-    this.listingService.searchListings(this.query, this.filters).subscribe({
+    this.listingService.searchListings({ q: this.query, ...this.filters }).subscribe({
       next: (res: any) => {
         this.results = res.data || [];
         this.totalResults = res.meta?.total || this.results.length;
@@ -180,7 +180,7 @@ export class SearchComponent implements OnInit {
   getListingCover(item: Listing): string {
     if (item.images && item.images.length > 0) {
       const cover = item.images.find(img => img.is_cover) || item.images[0];
-      return \/storage/\\;
+      return '/storage/' + item.images[0].path;
     }
     return 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80';
   }

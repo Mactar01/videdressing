@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -20,7 +20,7 @@ use App\Http\Controllers\Api\V1\Admin\AdminReportController;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes — VideDressing v1
+| API Routes ï¿½ VideDressing v1
 |--------------------------------------------------------------------------
 |
 | All routes are prefixed with /api/v1 automatically via bootstrap/app.php.
@@ -31,15 +31,17 @@ use App\Http\Controllers\Api\V1\Admin\AdminReportController;
 Route::middleware('set.locale')->prefix('v1')->group(function () {
 
     // =========================================================================
-    // AUTH — Public endpoints
+    // AUTH ï¿½ Public endpoints
     // =========================================================================
     Route::post('/auth/register', [AuthController::class, 'register']);
     Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+    Route::post('/auth/send-otp', [AuthController::class, 'sendOtp'])->middleware('throttle:5,1');
+    Route::post('/auth/verify-otp', [AuthController::class, 'verifyOtp']);
     Route::get('/auth/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])
         ->name('verification.verify');
 
     // =========================================================================
-    // PUBLIC — No authentication required
+    // PUBLIC ï¿½ No authentication required
     // =========================================================================
 
     // Categories
@@ -59,7 +61,7 @@ Route::middleware('set.locale')->prefix('v1')->group(function () {
     Route::get('/users/{id}/reviews', [ReviewController::class, 'index']);
 
     // =========================================================================
-    // AUTHENTICATED — Requires valid Sanctum token
+    // AUTHENTICATED ï¿½ Requires valid Sanctum token
     // =========================================================================
     Route::middleware('auth:sanctum')->group(function () {
 
@@ -109,7 +111,7 @@ Route::middleware('set.locale')->prefix('v1')->group(function () {
         Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store']);
         Route::post('/conversations/{conversation}/read', [MessageController::class, 'markAsRead']);
 
-        // --- Orders (Stripe stand-by — stubs retournent 501) ---
+        // --- Orders (Stripe stand-by ï¿½ stubs retournent 501) ---
         Route::get('/orders', [OrderController::class, 'index']);
         Route::post('/orders', [OrderController::class, 'store']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
@@ -125,7 +127,7 @@ Route::middleware('set.locale')->prefix('v1')->group(function () {
         Route::get('/reports', [ReportController::class, 'index']);
 
         // =====================================================================
-        // ADMIN — Requires auth:sanctum + IsAdmin middleware
+        // ADMIN ï¿½ Requires auth:sanctum + IsAdmin middleware
         // =====================================================================
         Route::middleware('is.admin')->prefix('admin')->group(function () {
 

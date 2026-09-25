@@ -43,7 +43,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
 
       <!-- Sélection d'annonces API -->
       <section *ngIf="listings.length > 0">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8 px-2">Dernières trouvailles</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-8 px-2">Les produits disponibles</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Carte Annonce -->
           <div *ngFor="let item of listings" [routerLink]="['/listing', item.id]" class="glass-panel group cursor-pointer flex flex-col h-full overflow-hidden hover:shadow-watermelon-pink/10 hover:-translate-y-1 transition-all">
@@ -83,10 +83,7 @@ export class HomeComponent implements OnInit {
       this.categories = res;
     });
 
-    this.listingService.searchListings('').subscribe(res => {
-      // Pour l'instant, c'est branché sur l'index des listings.
-      // Si la pagination est utilisée par l'API, il faudra adapter (res.data)
-      // En l'état, on suppose que l'API renvoie un tableau ou un objet paginé
+    this.listingService.getListings().subscribe(res => {
       this.listings = Array.isArray(res) ? res.slice(0, 8) : (res as any).data?.slice(0, 8) || [];
     });
   }

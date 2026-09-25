@@ -8,10 +8,10 @@ import { ListingService, Listing } from '../../core/services/listing.service';
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  template: \
+  template: `
     <div class="max-w-7xl mx-auto px-4 animate-fade-in-up" *ngIf="authService.currentUser$ | async as user">
       
-      <!-- En-tête du Dashboard -->
+      <!-- En-tte du Dashboard -->
       <div class="glass-panel p-8 md:p-12 mb-8 relative overflow-hidden">
         <div class="absolute -top-24 -right-24 w-64 h-64 bg-watermelon-pink/20 rounded-full blur-3xl -z-10"></div>
         <div class="flex flex-col md:flex-row items-center gap-6">
@@ -20,7 +20,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
           </div>
           <div class="text-center md:text-left">
             <h1 class="text-3xl font-extrabold text-gray-900">Salut, {{ user.name }} ! ??</h1>
-            <p class="text-gray-500 mt-1">Gérez vos annonces et vos ventes depuis cet espace.</p>
+            <p class="text-gray-500 mt-1">Grez vos annonces et vos ventes depuis cet espace.</p>
           </div>
           <div class="md:ml-auto mt-6 md:mt-0 flex flex-wrap justify-center gap-4">
             <button routerLink="/dashboard/inbox" class="px-6 py-3 bg-white text-gray-900 border border-gray-200 rounded-full font-bold shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex items-center gap-2">
@@ -50,8 +50,8 @@ import { ListingService, Listing } from '../../core/services/listing.service';
       <div *ngIf="!isLoading && myListings.length === 0" class="text-center py-20 glass-panel border-dashed border-2 border-gray-300">
         <div class="text-6xl mb-4 opacity-50">??</div>
         <h3 class="text-xl font-bold text-gray-700">Aucune annonce pour le moment.</h3>
-        <p class="text-gray-500 mt-2">Commencez à vider votre maison ou votre dressing en créant votre première annonce !</p>
-        <button routerLink="/dashboard/create" class="mt-6 px-6 py-3 bg-watermelon-pink text-white rounded-full font-bold shadow-lg hover:-translate-y-1 transition-transform">Créer ma première annonce</button>
+        <p class="text-gray-500 mt-2">Commencez  vider votre maison ou votre dressing en crant votre premire annonce !</p>
+        <button routerLink="/dashboard/create" class="mt-6 px-6 py-3 bg-watermelon-pink text-white rounded-full font-bold shadow-lg hover:-translate-y-1 transition-transform">Crer ma premire annonce</button>
       </div>
 
       <!-- Grid -->
@@ -63,11 +63,11 @@ import { ListingService, Listing } from '../../core/services/listing.service';
             
             <!-- Badges -->
             <div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold shadow-sm">
-              {{ listing.price }}€
+              {{ listing.price }}
             </div>
             
             <div *ngIf="listing.status === 'archived'" class="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <span class="px-4 py-2 bg-black/60 text-white rounded-full font-bold text-sm backdrop-blur-md border border-white/20">Archivé</span>
+              <span class="px-4 py-2 bg-black/60 text-white rounded-full font-bold text-sm backdrop-blur-md border border-white/20">Archiv</span>
             </div>
             <div *ngIf="listing.status === 'sold'" class="absolute inset-0 bg-watermelon-pink/40 flex items-center justify-center">
               <span class="px-4 py-2 bg-watermelon-pink text-white rounded-full font-bold text-sm backdrop-blur-md border border-white/20">Vendu ??</span>
@@ -101,8 +101,8 @@ import { ListingService, Listing } from '../../core/services/listing.service';
       </div>
 
     </div>
-  \
-})
+    `
+  })
 export class DashboardComponent implements OnInit {
   authService = inject(AuthService);
   listingService = inject(ListingService);
@@ -137,7 +137,7 @@ export class DashboardComponent implements OnInit {
   }
 
   delete(id: number) {
-    if (confirm("Voulez-vous supprimer DÉFINITIVEMENT cette annonce ?")) {
+    if (confirm("Voulez-vous supprimer DFINITIVEMENT cette annonce ?")) {
       this.listingService.deleteListing(id).subscribe(() => {
         this.loadListings();
       });
@@ -147,7 +147,7 @@ export class DashboardComponent implements OnInit {
   getListingCover(item: Listing): string {
     if (item.images && item.images.length > 0) {
       const cover = item.images.find(img => img.is_cover) || item.images[0];
-      return \/storage/\\;
+      return '/storage/' + item.images[0].path;
     }
     return 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80';
   }

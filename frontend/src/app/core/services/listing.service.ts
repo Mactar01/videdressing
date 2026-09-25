@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 export interface Listing {
   id: number;
-  title: any; // JSON localisé
+  title: any; // JSON localisÃ©
   description?: any;
   price: string;
   currency: string;
@@ -28,28 +28,35 @@ export class ListingService {
   private apiUrl = '/api/v1/listings';
 
   /**
-   * Récupère les détails d'une annonce spécifique
+   * RÃ©cupÃ¨re les dÃ©tails d'une annonce spÃ©cifique
    */
   getListing(id: number | string): Observable<Listing> {
     return this.http.get<Listing>(`${this.apiUrl}/${id}`);
   }
 
   /**
-   * Récupère la liste des annonces via Meilisearch / Scout
+   * RÃ©cupÃ¨re la liste des annonces via Meilisearch / Scout
    */
   searchListings(query: string = ''): Observable<Listing[]> {
     return this.http.get<Listing[]>('/api/v1/search', { params: { q: query } });
   }
 
   /**
-   * Crée une nouvelle annonce (générique avec attributs dynamiques)
+   * Récupère la liste des annonces disponibles
+   */
+  getListings(): Observable<{data: Listing[]} | Listing[]> {
+    return this.http.get<{data: Listing[]} | Listing[]>(this.apiUrl);
+  }
+
+  /**
+   * CrÃ©e une nouvelle annonce (gÃ©nÃ©rique avec attributs dynamiques)
    */
   getFavorites(): Observable<any> {
-    return this.http.get(/api/v1/favorites);
+    return this.http.get('/api/v1/favorites');
   }
 
   toggleFavorite(listingId: number): Observable<any> {
-    return this.http.post(/api/v1/listings//favorite, {});
+    return this.http.post('/api/v1/listings/'+listingId+'/favorite', {});
   }
 
   createListing(formData: FormData): Observable<any> {
@@ -66,28 +73,28 @@ export class ListingService {
   }
 
   /**
-   * Publie l'annonce (Passe de Draft à Active)
+   * Publie l'annonce (Passe de Draft Ã  Active)
    */
   publishListing(listingId: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${listingId}/publish`, {});
   }
 
   /**
-   * Récupère les annonces de l'utilisateur connecté
+   * RÃ©cupÃ¨re les annonces de l'utilisateur connectÃ©
    */
   getMyListings(): Observable<{data: Listing[]}> {
     return this.http.get<{data: Listing[]}>(`/api/v1/my-listings`);
   }
 
   /**
-   * Archive une annonce (équivalent à marquer comme vendu/indisponible)
+   * Archive une annonce (Ã©quivalent Ã  marquer comme vendu/indisponible)
    */
   archiveListing(listingId: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${listingId}/archive`, {});
   }
 
   /**
-   * Supprime définitivement une annonce
+   * Supprime dÃ©finitivement une annonce
    */
   deleteListing(listingId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${listingId}`);
