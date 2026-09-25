@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 
 namespace App\Http\Controllers\Api\V1;
 
@@ -27,11 +27,11 @@ class AuthController extends BaseApiController
             'phone' => $request->phone,
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        \Illuminate\Support\Facades\Auth::login($user); $request->session()->regenerate();
 
         return $this->sendResponse([
             'user' => $user,
-            'token' => $token
+            
         ], 'User registered successfully', 201);
     }
 
@@ -54,7 +54,7 @@ class AuthController extends BaseApiController
      *              @OA\Property(property="password", type="string", format="password", example="password")
      *          )
      *      ),
-     *      @OA\Response(response=200, description="Connexion réussie avec token"),
+     *      @OA\Response(response=200, description="Connexion rï¿½ussie avec token"),
      *      @OA\Response(response=401, description="Identifiants invalides")
      * )
      */
