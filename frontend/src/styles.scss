@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+ * Style Global "Ultra Moderne"
+ * Inspiré de Manus UI / Watermelon UI 
+ */
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-glass-bg backdrop-blur-glass border border-glass-border shadow-xl rounded-2xl;
+  }
+  
+  .dark .glass-panel {
+    @apply bg-dark-glass border-gray-700 text-white;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-watermelon-pink to-melon-green;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Fond par défaut, on mettra un SVG Haikei via le composant racine */
+  background-color: #f8fafc; 
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+}
