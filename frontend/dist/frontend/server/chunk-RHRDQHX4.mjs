@@ -1,0 +1,2 @@
+import './polyfills.server.mjs';
+import{m as s,q as a,sb as n}from"./chunk-CC5YNCPN.mjs";var i=class t{http=a(n);apiUrl="/api/v1/conversations";startConversation(e){return this.http.post(this.apiUrl,{listing_id:e})}getConversations(){return this.http.get(this.apiUrl)}getMessages(e){return this.http.get(`${this.apiUrl}/${e}/messages`)}sendMessage(e,r){return this.http.post(`${this.apiUrl}/${e}/messages`,{body:r})}static \u0275fac=function(r){return new(r||t)};static \u0275prov=s({token:t,factory:t.\u0275fac,providedIn:"root"})};export{i as a};
