@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Requests\Auth;
 
@@ -23,9 +23,9 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'phone' => ['nullable', 'string', 'regex:/^\+?[1-9]\d{1,14}$/'],
+            'email' => ['nullable', 'email', 'unique:users'],
+            'password' => ['nullable', 'string', 'min:8'],
+            'phone' => ['required', 'unique:users,phone', 'string', 'regex:/^\+?[1-9]\d{1,14}$/'],
         ];
     }
 }
