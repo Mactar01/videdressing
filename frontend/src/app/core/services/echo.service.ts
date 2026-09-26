@@ -55,7 +55,7 @@ export class EchoService {
   leaveConversation(conversationId: number) {
     if (this.echo) {
       this.echo.leave(`conversation.${conversationId}`);
-      console.log(`Ã¢ÂÅ’ Fin de l'ÃƒÂ©coute du canal privÃƒÂ© : conversation.${conversationId}`);
+      console.log(`âÂÅ’ Fin de l'ÃƒÂ©coute du canal privÃƒÂ© : conversation.${conversationId}`);
     }
   }
 }

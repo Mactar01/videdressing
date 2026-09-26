@@ -43,6 +43,8 @@ abstract /**
  */
 class BaseApiController extends Controller
 {
+    use \Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
     /**
      * Retourne une réponse JSON de succès générique.
      *

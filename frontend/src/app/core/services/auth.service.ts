@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, switchMap, map } from 'rxjs';
 
 export interface User {
   id: number;
@@ -15,29 +15,30 @@ export interface User {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = ''; // On utilise le proxy Angular dÃ©sormais !
+  private apiUrl = ''; // On utilise le proxy Angular désormais !
   
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor() {
-    this.checkAuthStatus().subscribe({
-      error: () => this.currentUserSubject.next(null)
-    });
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('auth_token')) {
+      this.checkAuthStatus().subscribe({
+        error: () => {
+          this.currentUserSubject.next(null);
+          localStorage.removeItem('auth_token');
+        }
+      });
+    }
   }
 
-  /**
-   * Initialise la protection CSRF de Sanctum
-   */
-  private csrfCookie(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/sanctum/csrf-cookie`);
-  }
+
 
   /**
-   * Tente de rÃ©cupÃ©rer le profil de l'utilisateur s'il est dÃ©jÃ  connectÃ© via les cookies
+   * Tente de récupérer le profil de l'utilisateur s'il est déjÃ  connecté via les cookies
    */
   checkAuthStatus(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/api/v1/auth/me`).pipe(
+    return this.http.get<any>(`${this.apiUrl}/api/v1/auth/me`).pipe(
+      map(res => res.data || res.user || res),
       tap(user => this.currentUserSubject.next(user))
     );
   }
@@ -45,42 +46,60 @@ export class AuthService {
   /**
    * Connecte l'utilisateur
    */
+  login(credentials: any): Observable<User> {
+    return this.http.post<any>(`${this.apiUrl}/api/v1/auth/login`, credentials).pipe(
+      tap(res => {
+        const token = res.data?.token || res.token;
+        if (token && typeof localStorage !== 'undefined') {
+          localStorage.setItem('auth_token', token);
+        }
+      }),
+      map(res => res.data?.user || res.user || res.data || res),
+      tap(user => this.currentUserSubject.next(user))
+    );
+  }
 
   /**
    * Inscrit l'utilisateur
    */
-  register(credentials: {name: string, phone: string, email?: string}): Observable<User> {
-    return this.csrfCookie().pipe(
-      switchMap(() => this.http.post<any>(this.apiUrl + '/api/v1/auth/register', credentials)),
-      switchMap(() => this.checkAuthStatus())
-    );
+  register(credentials: {name: string, phone: string, email?: string}): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/v1/auth/register`, credentials);
   }
 
   /**
    * Envoie un OTP au téléphone
    */
   sendOtp(phone: string): Observable<any> {
-    return this.csrfCookie().pipe(
-      switchMap(() => this.http.post(`${this.apiUrl}/api/v1/auth/send-otp`, { phone }))
-    );
+    return this.http.post(`${this.apiUrl}/api/v1/auth/send-otp`, { phone });
   }
 
   /**
    * Vérifie le code OTP pour se connecter
    */
   verifyOtp(phone: string, code: string): Observable<User> {
-    return this.csrfCookie().pipe(
-      switchMap(() => this.http.post(`${this.apiUrl}/api/v1/auth/verify-otp`, { phone, code })),
-      switchMap(() => this.checkAuthStatus())
+    return this.http.post<any>(`${this.apiUrl}/api/v1/auth/verify-otp`, { phone, code }).pipe(
+      tap(res => {
+        const token = res.data?.token || res.token;
+        if (token && typeof localStorage !== 'undefined') {
+          localStorage.setItem('auth_token', token);
+        }
+      }),
+      map(res => res.data?.user || res.user || res.data || res),
+      tap(user => this.currentUserSubject.next(user))
     );
   }
 
   /**
-   * DÃ©connecte l'utilisateur
+   * Déconnecte l'utilisateur
    */
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/v1/auth/logout`, {}).pipe(
-      tap(() => this.currentUserSubject.next(null))
+      tap(() => {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.removeItem('auth_token');
+        }
+        this.currentUserSubject.next(null);
+      })
     );
   }
 

@@ -20,7 +20,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
           Meubles, électroménager, mode ou high-tech. Donnez une seconde vie à vos objets sur la plateforme de référence.
         </p>
         <div class="flex justify-center gap-6">
-          <button class="px-8 py-4 bg-gray-900 text-white rounded-full font-bold shadow-2xl hover:shadow-gray-900/40 hover:-translate-y-1 transition-all">
+          <button routerLink="/dashboard/create" class="px-8 py-4 bg-gray-900 text-white rounded-full font-bold shadow-2xl hover:shadow-gray-900/40 hover:-translate-y-1 transition-all">
             Déposer une annonce
           </button>
         </div>
@@ -32,7 +32,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
           <h2 class="text-2xl font-bold text-gray-900">Univers à explorer</h2>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          <div *ngFor="let cat of categories" class="glass-panel p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-watermelon-pink/20 hover:-translate-y-1 transition-all group relative overflow-hidden">
+          <div *ngFor="let cat of categories" [routerLink]="['/search']" [queryParams]="{category: cat.slug}" class="glass-panel p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-watermelon-pink/20 hover:-translate-y-1 transition-all group relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <!-- Si l'icône de la DB correspond à des émojis ou du texte SVG, on gère ici. Pour le MVP, on utilise des emojis mappés. -->
             <div class="text-3xl mb-3">{{ getCategoryEmoji(cat.slug) }}</div>
@@ -71,6 +71,17 @@ import { ListingService, Listing } from '../../core/services/listing.service';
   `
 })
 export class HomeComponent implements OnInit {
+
+  faq = [
+    { question: "Comment vendre un article ?", answer: "Cliquez sur 'Vends tes articles' dans le menu et suivez les instructions.", open: false },
+    { question: "Quels sont les frais ?", answer: "L'inscription est gratuite, une commission de 5% est prélevée sur chaque vente.", open: false },
+    { question: "Comment fonctionne la livraison ?", answer: "Vous pouvez choisir entre une remise en main propre ou un envoi postal.", open: false }
+  ];
+
+  toggleFaq(index: number) {
+    this.faq[index].open = !this.faq[index].open;
+  }
+
   private categoryService = inject(CategoryService);
   private listingService = inject(ListingService);
 
@@ -84,7 +95,8 @@ export class HomeComponent implements OnInit {
     });
 
     this.listingService.getListings().subscribe(res => {
-      this.listings = Array.isArray(res) ? res.slice(0, 8) : (res as any).data?.slice(0, 8) || [];
+      const arr = Array.isArray(res) ? res : ((res as any).data && Array.isArray((res as any).data)) ? (res as any).data : [];
+      this.listings = arr.slice(0, 8);
     });
   }
 

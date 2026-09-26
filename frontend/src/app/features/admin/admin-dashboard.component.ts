@@ -12,11 +12,11 @@ import { HttpClient } from '@angular/common/http';
       <div class="flex items-center justify-between mb-8">
         <div>
           <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Panneau d'Administration</h1>
-          <p class="text-gray-500 mt-1">Supervisez l'activitÃ© de votre marketplace VideDressing.</p>
+          <p class="text-gray-500 mt-1">Supervisez l'activité de votre marketplace VideDressing.</p>
         </div>
         <div class="bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md flex items-center gap-2">
           <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          SystÃ¨me En Ligne
+          Système En Ligne
         </div>
       </div>
 
@@ -25,7 +25,7 @@ import { HttpClient } from '@angular/common/http';
       </div>
 
       <ng-container *ngIf="!isLoading && stats">
-        <!-- Chiffres clÃ©s -->
+        <!-- Chiffres clés -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           
           <div class="glass-panel p-6 border-t-4 border-watermelon-pink transform hover:-translate-y-1 transition-all">
@@ -80,10 +80,10 @@ import { HttpClient } from '@angular/common/http';
             </div>
           </div>
 
-          <!-- DerniÃ¨res Annonces -->
+          <!-- Dernières Annonces -->
           <div class="glass-panel p-6">
             <div class="flex justify-between items-center mb-6">
-              <h3 class="text-xl font-bold text-gray-900">Annonces RÃ©centes</h3>
+              <h3 class="text-xl font-bold text-gray-900">Annonces Récentes</h3>
               <button class="text-watermelon-pink text-sm font-bold hover:underline">Voir tout</button>
             </div>
             <div class="space-y-4">

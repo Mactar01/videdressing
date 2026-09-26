@@ -2,10 +2,11 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Listing {
   id: number;
-  title: any; // JSON localisÃ©
+  title: any; // JSON localisé
   description?: any;
   price: string;
   currency: string;
@@ -28,14 +29,14 @@ export class ListingService {
   private apiUrl = '/api/v1/listings';
 
   /**
-   * RÃ©cupÃ¨re les dÃ©tails d'une annonce spÃ©cifique
+   * Récupère les détails d'une annonce spécifique
    */
   getListing(id: number | string): Observable<Listing> {
     return this.http.get<Listing>(`${this.apiUrl}/${id}`);
   }
 
   /**
-   * RÃ©cupÃ¨re la liste des annonces via Meilisearch / Scout
+   * Récupère la liste des annonces via Meilisearch / Scout
    */
   searchListings(query: string = ''): Observable<Listing[]> {
     return this.http.get<Listing[]>('/api/v1/search', { params: { q: query } });
@@ -49,7 +50,7 @@ export class ListingService {
   }
 
   /**
-   * CrÃ©e une nouvelle annonce (gÃ©nÃ©rique avec attributs dynamiques)
+   * Crée une nouvelle annonce (générique avec attributs dynamiques)
    */
   getFavorites(): Observable<any> {
     return this.http.get('/api/v1/favorites');
@@ -69,7 +70,21 @@ export class ListingService {
   uploadImage(listingId: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('image', file);
-    return this.http.post(`${this.apiUrl}/${listingId}/images`, formData);
+    return this.http.post(`${this.apiUrl}/${listingId}/images`, formData, { responseType: 'text' }).pipe(
+      map(res => {
+        try {
+          // Si PHP a affiché un Warning/Notice (ex: PHP Request Startup: file created in temp dir...)
+          // On nettoie la chaîne avant le premier {
+          if (typeof res === 'string' && res.indexOf('{') !== -1) {
+            const jsonStr = res.substring(res.indexOf('{'));
+            return JSON.parse(jsonStr);
+          }
+          return res;
+        } catch (e) {
+          return res;
+        }
+      })
+    );
   }
 
   /**
@@ -80,21 +95,21 @@ export class ListingService {
   }
 
   /**
-   * RÃ©cupÃ¨re les annonces de l'utilisateur connectÃ©
+   * Récupère les annonces de l'utilisateur connecté
    */
   getMyListings(): Observable<{data: Listing[]}> {
     return this.http.get<{data: Listing[]}>(`/api/v1/my-listings`);
   }
 
   /**
-   * Archive une annonce (Ã©quivalent Ã  marquer comme vendu/indisponible)
+   * Archive une annonce (équivalent Ã  marquer comme vendu/indisponible)
    */
   archiveListing(listingId: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${listingId}/archive`, {});
   }
 
   /**
-   * Supprime dÃ©finitivement une annonce
+   * Supprime définitivement une annonce
    */
   deleteListing(listingId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${listingId}`);

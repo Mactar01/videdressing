@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name'              => 'Marie Dubois (Admin)',
+                'phone'             => '+22177' . rand(1000000, 9999999),
                 'email'             => 'marie.admin@vdressing.fr',
                 'password'          => $password,
                 'is_admin'          => true,
@@ -29,6 +30,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name'              => 'Sophie Martin',
+                'phone'             => '+22177' . rand(1000000, 9999999),
                 'email'             => 'sophiemartin@example.fr',
                 'password'          => $password,
                 'is_admin'          => false,
@@ -37,6 +39,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name'              => 'Thomas Bernard',
+                'phone'             => '+22177' . rand(1000000, 9999999),
                 'email'             => 'thomas.b@example.fr',
                 'password'          => $password,
                 'is_admin'          => false,
@@ -45,6 +48,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name'              => 'Emma Petit',
+                'phone'             => '+22177' . rand(1000000, 9999999),
                 'email'             => 'emma.p@example.fr',
                 'password'          => $password,
                 'is_admin'          => false,
@@ -53,6 +57,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name'              => 'Lucas Moreau',
+                'phone'             => '+22177' . rand(1000000, 9999999),
                 'email'             => 'lucas.m@example.fr',
                 'password'          => $password,
                 'is_admin'          => false,

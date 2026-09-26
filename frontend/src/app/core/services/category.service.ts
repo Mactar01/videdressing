@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface Category {
   id: number;
@@ -28,10 +29,10 @@ export class CategoryService {
   private apiUrl = '/api/v1/categories';
 
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl).pipe(map(res => res.data || res));
   }
 
   getAttributes(categoryId: number): Observable<CategoryAttribute[]> {
-    return this.http.get<CategoryAttribute[]>(`${this.apiUrl}/${categoryId}/attributes`);
+    return this.http.get<any>(`${this.apiUrl}/${categoryId}/attributes`).pipe(map(res => res.data || res));
   }
 }

@@ -11,7 +11,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
     <div class="max-w-7xl mx-auto px-4 animate-fade-in-up">
       <div class="mb-10 text-center">
         <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Mes Coups de ❤️</h1>
-        <p class="text-gray-500 mt-2">Retrouvez toutes les annonces que vous avez sauvegardées.</p>
+        <p class="text-gray-500 mt-2">Retrouvéez toutes les annonces que vous avez sauvegardées.</p>
       </div>
 
       <div *ngIf="isLoading" class="py-20 flex justify-center">
@@ -22,7 +22,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
         <div *ngFor="let item of favorites" [routerLink]="['/listing', item.id]" class="glass-panel group cursor-pointer flex flex-col h-full overflow-hidden hover:shadow-watermelon-pink/10 hover:-translate-y-1 transition-all">
           <div class="relative w-full aspect-[4/5] bg-gray-100 overflow-hidden">
             <img [src]="getListingCover(item)" [alt]="extractLocalString(item.title)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
-            <!-- Bouton unlike (Ã©vite la navigation) -->
+            <!-- Bouton unlike (évite la navigation) -->
             <div (click)="removeFavorite($event, item.id)" class="absolute top-3 right-3 bg-white p-2 rounded-full text-watermelon-pink shadow-md hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" /></svg>
             </div>
@@ -66,7 +66,7 @@ export class FavoritesComponent implements OnInit {
   }
 
   removeFavorite(event: Event, listingId: number) {
-    event.stopPropagation(); // EmpÃªcher le clic d'ouvrir la page de dÃ©tail
+    event.stopPropagation(); // Empêcher le clic d'ouvrir la page de détail
     
     // Retrait optimiste de l'UI
     this.favorites = this.favorites.filter(f => f.id !== listingId);

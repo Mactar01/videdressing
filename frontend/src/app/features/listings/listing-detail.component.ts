@@ -18,7 +18,7 @@ import { catchError, of } from 'rxjs';
       <nav class="mb-8 text-sm font-medium text-gray-500">
         <a routerLink="/" class="hover:text-watermelon-pink transition-colors">Accueil</a>
         <span class="mx-2">/</span>
-        <a href="#" class="hover:text-watermelon-pink transition-colors">{{ extractLocalString(listing.category?.name) || 'CatÃ©gorie' }}</a>
+        <a href="#" class="hover:text-watermelon-pink transition-colors">{{ extractLocalString(listing.category?.name) || 'Catégorie' }}</a>
         <span class="mx-2">/</span>
         <span class="text-gray-900">{{ extractLocalString(listing.title) }}</span>
       </nav>
@@ -40,7 +40,7 @@ import { catchError, of } from 'rxjs';
 
         <!-- Section Droite : Panneau d'informations Glassmorphism -->
         <div class="lg:col-span-5 relative">
-          <!-- Ce panneau reste collÃ© Ã  l'Ã©cran lors du dÃ©filement -->
+          <!-- Ce panneau reste collé Ã  l'écran lors du défilement -->
           <div class="sticky top-28 glass-panel p-8">
             <div class="flex justify-between items-start mb-4">
               <h1 class="text-3xl font-extrabold text-gray-900 leading-tight">
@@ -57,7 +57,7 @@ import { catchError, of } from 'rxjs';
 
             <div class="space-y-4 mb-8 text-sm">
               <div class="flex justify-between py-3 border-b border-gray-200/50">
-                <span class="text-gray-500 font-medium">Ã‰tat</span>
+                <span class="text-gray-500 font-medium">État</span>
                 <span class="text-gray-900 font-bold uppercase tracking-wider text-xs">{{ listing.condition }}</span>
               </div>
               <div class="flex justify-between py-3 border-b border-gray-200/50">
@@ -71,7 +71,7 @@ import { catchError, of } from 'rxjs';
               <button (click)="handleProtectedAction('buy')" class="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold shadow-xl hover:shadow-gray-900/40 hover:-translate-y-0.5 transition-all text-lg">
                 Acheter maintenant
               </button>
-              <button (click)="handleProtectedAction('contact')" class="w-full py-4 bg-white/60 backdrop-blur-md border border-gray-200 text-gray-900 rounded-2xl font-bold shadow-lg hover:bg-white hover:-translate-y-0.5 transition-all text-lg flex items-center justify-center gap-2">
+              <button (click)="handleProtectedAction('contact')" class="w-full py-4 bg-white backdrop-blur-md border border-gray-200 text-gray-900 rounded-2xl font-bold shadow-lg hover:bg-white hover:-translate-y-0.5 transition-all text-lg flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-watermelon-pink" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                 Contacter le vendeur
               </button>
@@ -103,16 +103,23 @@ import { catchError, of } from 'rxjs';
     <!-- Templates alternatifs -->
     <ng-template #loadingOrError>
       <div class="py-20 text-center text-gray-500 animate-pulse" *ngIf="!hasError">
-        Chargement de la pÃ©pite...
+        Chargement de la pépite...
       </div>
       <div class="py-20 text-center text-red-500" *ngIf="hasError">
-        <h2 class="text-2xl font-bold mb-4">Annonce introuvable</h2>
+        <h2 class="text-2xl font-bold mb-4">Annonce introuvéable</h2>
         <button routerLink="/" class="px-6 py-3 bg-gray-900 text-white rounded-full">Retour Ã  l'accueil</button>
       </div>
     </ng-template>
   `
 })
 export class ListingDetailComponent implements OnInit {
+
+  copyText(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Texte copié !");
+    });
+  }
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private titleService = inject(Title);
@@ -135,7 +142,7 @@ export class ListingDetailComponent implements OnInit {
     this.listingService.getListing(id).pipe(
       catchError(err => {
         this.hasError = true;
-        // Permet au SSR de renvoyer un code 404 (idÃ©alement via un token d'injection serveur)
+        // Permet au SSR de renvoyer un code 404 (idéalement via un token d'injection serveur)
         return of(null);
       })
     ).subscribe(data => {
@@ -148,10 +155,10 @@ export class ListingDetailComponent implements OnInit {
 
   updateSeoTags(listing: Listing) {
     const title = this.extractLocalString(listing.title);
-    const description = this.extractLocalString(listing.description)?.substring(0, 160) || 'DÃ©couvrez cet article sur VideDressing.';
+    const description = this.extractLocalString(listing.description)?.substring(0, 160) || 'Découvrez cet article sur VideDressing.';
     const imageUrl = this.coverImageUrl();
 
-    // Rendu cÃ´tÃ© serveur pour le SEO Google
+    // Rendu côté serveur pour le SEO Google
     this.titleService.setTitle(`${title} - Vendu par ${listing.user?.name} | VideDressing`);
     
     this.metaService.updateTag({ name: 'description', content: description });
@@ -173,7 +180,7 @@ export class ListingDetailComponent implements OnInit {
   }
 
   /**
-   * Retourne l'URL de la premiÃ¨re image, ou un joli dÃ©gradÃ© par dÃ©faut
+   * Retourne l'URL de la première image, ou un joli dégradé par défaut
    */
   coverImageUrl(): string {
     if (this.listing?.images && this.listing.images.length > 0) {
@@ -184,8 +191,8 @@ export class ListingDetailComponent implements OnInit {
   }
 
   /**
-   * VÃ©rifie si l'utilisateur est connectÃ© avant d'Acheter ou de Contacter.
-   * Sinon, le redirige vers le login avec un paramÃ¨tre "returnUrl".
+   * Vérifie si l'utilisateur est connecté avant d'Acheter ou de Contacter.
+   * Sinon, le redirige vers le login avec un paramètre "returnUrl".
    */
   handleProtectedAction(action: 'buy' | 'contact') {
     if (this.authService.currentUserValue) {
@@ -203,7 +210,7 @@ export class ListingDetailComponent implements OnInit {
           });
         }
     } else {
-      // Redirection vers login en mÃ©morisant l'URL courante
+      // Redirection vers login en mémorisant l'URL courante
       this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
     }
   }

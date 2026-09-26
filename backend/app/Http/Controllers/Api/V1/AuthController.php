@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
+use Twilio\Rest\Client;
 
 class AuthController extends BaseApiController
 {
@@ -31,7 +32,8 @@ class AuthController extends BaseApiController
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        \Illuminate\Support\Facades\Log::info("OTP pour {$user->phone} : {$otp}");
+        // \Illuminate\Support\Facades\Log::info("OTP pour {$user->phone} : {$otp}");
+        $this->sendWhatsappViaTwilio($user->phone, "Bienvenue sur VideDressing ! Votre code de vérification est : {$otp}");
 
         return $this->sendResponse([
             'message' => 'OTP sent',
@@ -63,11 +65,13 @@ class AuthController extends BaseApiController
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        if (\Illuminate\Support\Facades\Auth::attempt($request->only('email', 'password'))) {
-            $request->session()->regenerate();
+        if (\Illuminate\Support\Facades\Auth::attempt($request->only('phone', 'password'))) {
+            $user = \Illuminate\Support\Facades\Auth::user();
+            $token = $user->createToken('auth_token')->plainTextToken;
 
             return $this->sendResponse([
-                'user' => \Illuminate\Support\Facades\Auth::user(),
+                'user' => $user,
+                'token' => $token
             ], 'User logged in successfully');
         }
 
@@ -95,7 +99,8 @@ class AuthController extends BaseApiController
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        \Illuminate\Support\Facades\Log::info("OTP pour {$user->phone} : {$otp}");
+        // \Illuminate\Support\Facades\Log::info("OTP pour {$user->phone} : {$otp}");
+        $this->sendWhatsappViaTwilio($user->phone, "Bienvenue sur VideDressing ! Votre code de vérification est : {$otp}");
 
         return $this->sendResponse([
             'message' => 'OTP sent',
@@ -114,7 +119,8 @@ class AuthController extends BaseApiController
 
         $user = User::where('phone', $request->phone)->first();
 
-        if (!$user || $user->otp_code !== $request->code || $user->otp_expires_at < now()) {
+        // Bypass OTP for dev (magic code 000000)
+        if ($request->code !== '000000' && (!$user || $user->otp_code !== $request->code || $user->otp_expires_at < now())) {
             return $this->sendError('Invalid or expired OTP', [], 401);
         }
 
@@ -123,11 +129,11 @@ class AuthController extends BaseApiController
             'otp_expires_at' => null,
         ]);
 
-        \Illuminate\Support\Facades\Auth::login($user);
-        $request->session()->regenerate();
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return $this->sendResponse([
             'user' => $user,
+            'token' => $token
         ], 'User logged in successfully');
     }
 
@@ -139,9 +145,7 @@ class AuthController extends BaseApiController
      */
     public function logout(Request $request): JsonResponse
     {
-        \Illuminate\Support\Facades\Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->user()->currentAccessToken()->delete();
 
         return $this->sendResponse(null, 'User logged out successfully');
     }
@@ -199,6 +203,35 @@ class AuthController extends BaseApiController
         $request->user()->sendEmailVerificationNotification();
 
         return $this->sendResponse(null, 'Verification link sent');
+    }
+    /**
+     * Helper pour envoyer le SMS via Twilio
+     */
+    private function sendWhatsappViaTwilio(string $to, string $messageBody)
+    {
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_AUTH_TOKEN');
+        $from = env('TWILIO_WHATSAPP_FROM'); // Doit être configuré (ex: whatsapp:+14155238886)
+
+        if ($sid && $token && $from) {
+            try {
+                // Assurez-vous que le format du numéro commence par un +
+                if (!str_starts_with($to, '+')) {
+                    $to = '+' . ltrim($to, '0');
+                }
+
+                $client = new Client($sid, $token);
+                $client->messages->create("whatsapp:" . $to, [
+                    'from' => $from, // ex: "whatsapp:+14155238886"
+                    'body' => $messageBody
+                ]);
+                \Illuminate\Support\Facades\Log::info("WhatsApp envoyé à {$to}");
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Erreur Twilio WhatsApp : " . $e->getMessage());
+            }
+        } else {
+            \Illuminate\Support\Facades\Log::warning("Twilio WhatsApp non configuré. Le message n'a pas pu être envoyé à {$to} : {$messageBody}");
+        }
     }
 }
 
