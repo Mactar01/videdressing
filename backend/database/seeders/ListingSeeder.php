@@ -35,6 +35,7 @@ class ListingSeeder extends Seeder
         for ($i = 0; $i < 15; $i++) {
             $listing = Listing::factory()->create([
                 'user_id' => $sellers->random()->id,
+                'status' => 'active',
                 'category_id' => $categories->random()->id,
                 'status' => 'active',
                 'price' => rand(5, 250),
@@ -55,6 +56,7 @@ class ListingSeeder extends Seeder
         for ($i = 0; $i < 3; $i++) {
             Listing::factory()->create([
                 'user_id' => $sellers->random()->id,
+                'status' => 'active',
                 'category_id' => $categories->random()->id,
                 'status' => 'draft',
                 'price' => rand(5, 250),
@@ -70,6 +72,7 @@ class ListingSeeder extends Seeder
             
             $listing = Listing::factory()->create([
                 'user_id' => $seller->id,
+                'status' => 'active',
                 'category_id' => $categories->random()->id,
                 'status' => 'sold',
                 'price' => rand(5, 250),
