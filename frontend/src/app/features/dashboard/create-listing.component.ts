@@ -164,12 +164,12 @@ import { switchMap, tap } from 'rxjs/operators';
 
           <!-- NAVIGATION WIZARD -->
           <div class="flex items-center justify-between pt-8 mt-8 border-t border-gray-100 dark:border-gray-700">
-            <button type="button" *ngIf="currentStep > 1" (click)="currentStep = currentStep - 1" class="px-6 py-3 text-gray-600 dark:text-gray-300 font-bold hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-colors">
+            <button type="button" *ngIf="currentStep > 1" (click)="currentStep = currentStep - 1" class="px-8 py-4 text-lg text-gray-600 dark:text-gray-300 font-bold hover:bg-gray-100 dark:bg-gray-700 rounded-xl transition-colors">
               Retour
             </button>
             <div *ngIf="currentStep === 1"></div> <!-- Spacer -->
 
-            <button type="button" *ngIf="currentStep < 4" (click)="nextStep()" class="px-8 py-3 bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2">
+            <button type="button" *ngIf="currentStep < 4" (click)="nextStep()" class="px-8 py-4 text-lg bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2">
               Continuer
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
             </button>
