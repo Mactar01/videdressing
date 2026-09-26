@@ -1,0 +1,2 @@
+import './polyfills.server.mjs';
+import{e as a,m as i,q as n,ub as o}from"./chunk-3WPUDOHH.mjs";var p=class r{http=n(o);apiUrl="/api/v1/categories";getCategories(){return this.http.get(this.apiUrl).pipe(a(t=>t.data||t))}getAttributes(t){return this.http.get(`${this.apiUrl}/${t}/attributes`).pipe(a(e=>e.data||e))}static \u0275fac=function(e){return new(e||r)};static \u0275prov=i({token:r,factory:r.\u0275fac,providedIn:"root"})};export{p as a};
