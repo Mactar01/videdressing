@@ -46,7 +46,7 @@ class CategorySeeder extends Seeder
                     [
                         'key'         => 'color',
                         'label'       => ['fr' => 'Couleur', 'en' => 'Color'],
-                        'type'        => 'multiselect',
+                        'type'        => 'select',
                         'options'     => [
                             ['value' => 'noir',  'label' => ['fr' => 'Noir']],
                             ['value' => 'blanc', 'label' => ['fr' => 'Blanc']],
@@ -111,7 +111,7 @@ class CategorySeeder extends Seeder
                     [
                         'key'     => 'color',
                         'label'   => ['fr' => 'Couleur', 'en' => 'Color'],
-                        'type'    => 'multiselect',
+                        'type'    => 'select',
                         'options' => [
                             ['value' => 'noir',   'label' => ['fr' => 'Noir']],
                             ['value' => 'blanc',  'label' => ['fr' => 'Blanc']],

@@ -357,7 +357,7 @@ export class CreateListingComponent implements OnInit {
       next: (publishedListing: any) => {
         this.isSubmitting = false;
         const finalId = publishedListing.id || publishedListing.data?.id;
-        this.router.navigate(['/listing', finalId]);
+        this.router.navigate(['/']);
       },
       error: (err) => {
         console.error(err);
