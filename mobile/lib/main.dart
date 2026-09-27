@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${listing.price.toStringAsFixed(2)} €',
+                  '${listing.price.toStringAsFixed(2)}  FCFA',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 4),

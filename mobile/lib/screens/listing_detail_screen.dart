@@ -67,7 +67,7 @@ class ListingDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${listing.price.toStringAsFixed(2)} €',
+                        '${listing.price.toStringAsFixed(2)}  FCFA',
                         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFFff7096)),
                       ),
                     ],

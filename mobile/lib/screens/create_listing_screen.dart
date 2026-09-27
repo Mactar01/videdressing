@@ -154,7 +154,7 @@ class _CreateListingScreenState extends State<CreateListingScreen> {
               controller: _priceController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                labelText: 'Prix (€)',
+                labelText: 'Prix ( FCFA)',
                 prefixIcon: const Icon(Icons.euro),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
