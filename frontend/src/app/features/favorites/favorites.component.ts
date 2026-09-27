@@ -30,7 +30,7 @@ import { ListingService, Listing } from '../../core/services/listing.service';
           <div class="p-5 flex-1 flex flex-col">
             <div class="flex justify-between items-start mb-2">
               <h3 class="font-bold text-lg text-gray-900 leading-tight truncate pr-2">{{ extractLocalString(item.title) }}</h3>
-              <span class="font-black text-lg text-watermelon-pink whitespace-nowrap">{{ item.price }}€</span>
+              <span class="font-black text-lg text-watermelon-pink whitespace-nowrap">{{ item.price }} FCFA</span>
             </div>
           </div>
         </div>

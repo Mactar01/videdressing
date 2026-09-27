@@ -58,7 +58,7 @@ import { switchMap } from 'rxjs/operators';
             <div>
               <h3 class="font-bold text-gray-900">{{ getOtherUser(activeConversation).name }}</h3>
               <a [routerLink]="['/listing', activeConversation.listing.id]" class="text-xs text-watermelon-pink hover:underline truncate max-w-xs block">
-                {{ extractLocalString(activeConversation.listing.title) }} - {{ activeConversation.listing.price }}â‚¬
+                {{ extractLocalString(activeConversation.listing.title) }} - {{ activeConversation.listing.price }} FCFA
               </a>
             </div>
           </div>

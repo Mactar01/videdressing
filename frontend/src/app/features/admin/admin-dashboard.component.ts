@@ -30,7 +30,7 @@ import { HttpClient } from '@angular/common/http';
           
           <div class="glass-panel p-6 border-t-4 border-watermelon-pink transform hover:-translate-y-1 transition-all">
             <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wider">Volume des ventes</p>
-            <h3 class="text-4xl font-black text-gray-900">{{ stats.metrics.revenue | number:'1.2-2' }} â‚¬</h3>
+            <h3 class="text-4xl font-black text-gray-900">{{ stats.metrics.revenue | number:'1.2-2' }}  FCFA</h3>
             <p class="text-green-500 text-xs mt-2 font-bold flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
               En croissance
@@ -93,7 +93,7 @@ import { HttpClient } from '@angular/common/http';
                 </div>
                 <div class="flex-1 overflow-hidden">
                   <h4 class="font-bold text-gray-900 text-sm truncate">{{ extractLocalString(listing.title) }}</h4>
-                  <p class="text-xs text-watermelon-pink font-bold">{{ listing.price }} â‚¬</p>
+                  <p class="text-xs text-watermelon-pink font-bold">{{ listing.price }}  FCFA</p>
                 </div>
                 <div class="flex gap-2">
                   <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors" title="Valider">

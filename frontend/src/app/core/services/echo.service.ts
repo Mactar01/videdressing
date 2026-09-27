@@ -37,14 +37,14 @@ export class EchoService {
       }
     });
 
-    console.log('Ã°Å¸â€Å’ Laravel Echo connectÃƒÂ© avec Reverb');
+    console.log('Ã°Å¸â FCFAÅ’ Laravel Echo connectÃƒÂ© avec Reverb');
   }
 
   listenToConversation(conversationId: number, callback: (message: any) => void) {
     if (!this.echo) this.initEcho();
     
     if (this.echo) {
-      console.log(`Ã°Å¸â€Â§ Ãƒâ€°coute du canal privÃƒÂ© : conversation.${conversationId}`);
+      console.log(`Ã°Å¸â FCFAÂ§ Ãƒâ FCFA°coute du canal privÃƒÂ© : conversation.${conversationId}`);
       this.echo.private(`conversation.${conversationId}`)
         .listen('.message.sent', (e: any) => {
           callback(e);
