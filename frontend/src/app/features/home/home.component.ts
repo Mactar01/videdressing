@@ -95,7 +95,16 @@ export class HomeComponent implements OnInit {
     });
 
     this.listingService.getListings().subscribe(res => {
-      const arr = Array.isArray(res) ? res : ((res as any).data && Array.isArray((res as any).data)) ? (res as any).data : [];
+      let arr = [];
+      if (Array.isArray(res)) {
+        arr = res;
+      } else if (res && (res as any).data) {
+        if (Array.isArray((res as any).data)) {
+          arr = (res as any).data;
+        } else if (Array.isArray((res as any).data.data)) {
+          arr = (res as any).data.data;
+        }
+      }
       this.listings = arr.slice(0, 8);
     });
   }
